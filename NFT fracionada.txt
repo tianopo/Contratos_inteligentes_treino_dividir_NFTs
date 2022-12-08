@@ -1,0 +1,36 @@
+referência para postar o NFT: https://ipfs.io/ipfs/QmTL1KVAAcrgD5axpYmBWshZxBvDrzBjXSUBrCN29tRbiJ?filename=teste.json
+Programas e outros usados: IPFS, Alchemy, Remix, Metamask, Mumbai Test Alchemy network, Opensea
+
+Contrato para testar a visualização do NFT:
+https://mumbai.polygonscan.com/address/0x46c0d257f3a18eb9cd598f2b27f72d1da3b84a71
+
+1° NFT
+https://mumbai.polygonscan.com/tx/0xf338491cc6ac9c39fd6ccd973a2e0f3775a69ff2f5a89a2e15fdc96c443b59cd
+
+2° NFT
+https://mumbai.polygonscan.com/tx/0x91475948a011c37a2b467d13a5061fb3bf96c5dc5041abf45285dc2993cb2a8c
+
+3° NFT
+https://mumbai.polygonscan.com/tx/0x01f13f6c9d30ecd637e0200eb0d55d639a338a9a00d57d4de53450c8e2497245
+
+4° NFT
+https://mumbai.polygonscan.com/tx/0x63a2a1c4533d40ad37de4c48f0b14c73833504f20d6590b749785cf4cb898b77
+
+Teste para testar o fracionamento dos NFT's:
+
+1 NFT como representação da propriedade de 75000tokens, ou seja 20kg de carbono
+
+carteira 1:
+0x7bfa265c947Be1932B09a202DE93e565e94f29B9
+
+carteira 2:
+0xE0D63a9eFf8Feab048a0BDa642886b8D488802E9
+
+carteira 3:
+0x5c1F15dDF6f67CE977aA930B2306E8EeCD848763
+
+2 transfere para 1:
+https://mumbai.polygonscan.com/tx/0x42b3927b38181d3a22123fa41716eb6636dfa247a83f04b6007f73463cd578f8
+
+2 transfere para 3:
+https://mumbai.polygonscan.com/tx/0x9d3d6ef6ec8cd85a565e3d1090cc829ae7a73f8976b11629f364a2a00ff34d81
