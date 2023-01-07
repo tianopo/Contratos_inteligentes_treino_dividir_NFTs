@@ -2,17 +2,6 @@
 
 pragma solidity ^0.8.17;
 
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address) {
-        return msg.sender;
-    }
-
-    function _msgData() internal view virtual returns (bytes calldata) {
-        this;
-        return msg.data;
-    }
-}
-
 interface IERC20 {
 
     function name() external view returns (string memory);
@@ -25,8 +14,6 @@ interface IERC20 {
 
     function totalSupply() external view returns (uint256);
 
-    function wallets() external view returns (address[] memory);
-
     //Returns the amount of tokens owned by `account`.
     function balanceOf(address account) external view returns (uint256);
 
@@ -38,34 +25,124 @@ interface IERC20 {
 
     function _beforeTokenTransfer() external;
 
-    event InvestmentDone(address indexed _to, uint256 indexed _amount);
-
-    event RefundDone(address indexed _to, uint256 _amount);
-
-    event FinanceCreated(address indexed _to, uint256 _amount);
 }
 
-contract ERC20 is Context, IERC20 {
+contract ERC20 {
     mapping (address => uint256) private _balances;
-
-    mapping (address => mapping (address => uint256)) private _allowances;
 
     uint256 private _goal;
     uint256 private _totalSupply;
     string private _name;
     string private _symbol;
     address private admin;
-    address[] private _wallets;
+    address private _sender = msg.sender;
+
+    IERC20 private erc;
+
+    event InvestmentDone(address indexed _from, uint256 indexed _amount);
+
+    event RefundDone(address indexed _to, uint256 _amount);
+
+    event FinanceCreated(address indexed _to, uint256 _amount);
+
+    modifier onlyOwner(){
+        require(msg.sender == _sender, "not owner");
+        _;
+    }
+    
+    function upgrade(address _erc) external onlyOwner{
+        erc = IERC20(_erc);
+    } 
+
+    // Returns the name of the token.
+    function name() public view virtual returns (string memory) {
+        return erc.name();
+    }
+
+     // Returns the symbol of the token.
+    function symbol() public view virtual returns (string memory) {
+        return erc.symbol();
+    }
+
+    // Returns the amount to reach the goal.
+    function goal() public view virtual returns (uint256){
+        return erc.goal();
+    }
+    
+    //Returns the number of decimals used to get its user representation.
+    function decimals() public view virtual returns (uint8) {
+        return erc.decimals();
+    }
+
+    // See {IERC20-totalSupply}.
+    function totalSupply() public view virtual returns (uint256) {
+        return erc.totalSupply();
+    }
+
+    // See {IERC20-balanceOf}.
+    function balanceOf(address account) public view virtual returns (uint256) {
+        return erc.balanceOf(account);
+    }
+
+    function investment() public payable{
+        require(msg.value > 0,"Insuficient balance to invest");
+
+        _totalSupply += msg.value;
+        _balances[_sender] += msg.value;
+
+        emit InvestmentDone(_sender, _balances[_sender]);
+    }
+
+    //The Ethereum balance is refunded with tokens, the tokens are pratically burned.
+    function refund() public payable{
+        require(_totalSupply >= _balances[_sender] && _totalSupply != 0 && _balances[_sender] > 0,"Insuficient balance to refund");
+        require(_goal > _totalSupply,"You reached the goal");
+
+        _beforeTokenTransfer();
+
+        payable(_sender).transfer(_balances[_sender]);
+
+        _totalSupply -= _balances[_sender];
+        _balances[_sender] -= _balances[_sender];
+
+        emit RefundDone(_sender, _balances[_sender]);
+    }
+
+    function getFinance() public payable onlyOwner{
+        require(_goal <= _totalSupply,"You didn't reach the goal");
+
+        payable(admin).transfer(_totalSupply);
+
+        _totalSupply -= _totalSupply;
+        
+        emit FinanceCreated(admin, _totalSupply);
+    }
+
+    //Hooks are to include some information before the investor put his money in the finance project, this is optional.
+    function _beforeTokenTransfer() public {
+
+    }
+}
+
+contract V1 {
+    mapping (address => uint256) private _balances;
+
+    uint256 private _goal;
+    uint256 private _totalSupply;
+    string private _name;
+    string private _symbol;
+    address private admin;
+    address private _sender = msg.sender;
 
     constructor (string memory name_, string memory symbol_, uint256 goal_) {
         _name = name_;
         _symbol = symbol_;
         _goal = goal_ * 10**uint(decimals());
-        admin = _msgSender();
+        admin = _sender;
     }
 
     modifier onlyOwner(){
-        require(admin == msg.sender, "not owner");
+        require(admin == _sender, "not owner");
         _;
     }
 
@@ -94,49 +171,8 @@ contract ERC20 is Context, IERC20 {
         return _totalSupply;
     }
 
-    // Return the addresses that invested.
-    function wallets() public view virtual returns (address[] memory){
-        return _wallets;
-    }
-
     // See {IERC20-balanceOf}.
-    function balanceOf(address account) public view virtual override returns (uint256) {
+    function balanceOf(address account) public view virtual returns (uint256) {
         return _balances[account];
-    }
-
-    function investment() public payable{
-        require(msg.value > 0,"Insuficient balance");
-
-        _beforeTokenTransfer();
-        _totalSupply += msg.value;
-        _balances[_msgSender()] += msg.value;
-    }
-
-    //The Ethereum balance is refunded with tokens, the tokens are pratically burned.
-    function refund() external payable{
-        require(_totalSupply >= _balances[_msgSender()] && _totalSupply != 0 && _balances[_msgSender()] > 0,"Insuficient balance to refund");
-        require(_goal > _totalSupply,"You reached the goal");
-
-            //The transfer is not paid in wei, gwei or finney but in Ethereum
-        payable(_msgSender()).transfer(_balances[_msgSender()]);
-
-        _totalSupply -= _balances[_msgSender()];
-        _balances[_msgSender()] -= _balances[_msgSender()];
-
-        emit RefundDone(_msgSender(), _balances[_msgSender()]);
-    }
-
-    function getFinance() public payable onlyOwner{
-        require(_goal <= _totalSupply,"You didn't reach the goal");
-
-        payable(admin).transfer(_totalSupply);
-
-        _totalSupply -= _totalSupply;
-        
-        emit FinanceCreated(admin, _totalSupply);
-    }
-
-    //Hooks are to include some information before the investor put his money in the finance project, this is optional.
-    function _beforeTokenTransfer() public { 
     }
 }
