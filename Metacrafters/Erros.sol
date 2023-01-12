@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.17;
 
-contract hi{
+contract functionErros{
     address private sender = msg.sender;
     uint256 private quant;
 
-    error InsufficientBalance(uint balance, uint withdrawAmount);
+    error InsufficientBalance(uint balance, uint amount);
 
     function getNumber() public view returns(uint256){
         return quant;
@@ -16,14 +16,14 @@ contract hi{
         require(msg.value > 0,"Insuficient balance");
     }
 
-    function withdraw(uint _withdrawAmount) public payable {
-        uint bal = address(this).balance;
+    function withdraw(uint _amount) public payable {
+        uint balance = address(this).balance;
 
-        if (bal < _withdrawAmount) {
-            revert InsufficientBalance({balance: bal, withdrawAmount: _withdrawAmount});
+        if (balance < _amount) {
+            revert InsufficientBalance({balance: balance, amount: _amount});
         }
 
-        payable(sender).transfer(_withdrawAmount);
+        payable(sender).transfer(_amount);
     }
 
     function luckNumber(uint256 amount) public{
