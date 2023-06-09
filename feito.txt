@@ -1,0 +1,74 @@
+instalação do hardhat: npm install -g hardhat mocha ethers axios
+next react react-dom web3modal eslint tailwildcss postcss autoprefixer
+@nomicfoundation/hardhat-toolbox @walletconnect/web3-provider
+
+no arquivo hardhat.config.js fazer um sistema básico com o alchemy:
+
+require("@nomicfoundation/hardhat-toolbox");
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  defaultNetwork: "mumbai",
+  networks: {
+    hardhat: {
+
+    },
+    mumbai: {
+      url: "https://polygon-mumbai.g.alchemy.com/v2/exHIHkjVQ4a4xeRHoQiJw7iTZHmys6rJ",
+      accounts: ["b38def016f6e2163088932101c99ad6c60bff9daae5c4c20ab9bce30f2f343a0"],
+    },
+    // outras redes...
+  },
+  solidity: {
+    version: "0.8.18",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
+  paths:{
+    sources: "./contracts",
+    tests: "./tests",
+    cache: "./cache",
+    artifacts: "./artifacts",
+  },
+  mocha: {
+    timeout: 40000
+  }
+}
+
+no diretório 'contracts' criar o contrato 'meucontrato.sol'
+
+compilar o contrato com 'npx hardhat compile', gera arquivos no
+diretório artifacts incluindo bytecode e ABI do contrato
+
+implantar contrato inteligente na pasta scripts em deploy.js:
+const { ethers } = require("hardhat");
+
+async function main() {
+  const Contract = await ethers.getContractFactory("MeuContrato");
+  const contract = await Contract.deploy();
+
+  await contract.deployed();
+
+  console.log("Contrato implantado em:", contract.address);
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+dica: o hardhat aceita apenas tipos commonjs
+
+no terminal, executar o comando 'npx hardhat run scripts/deploy.js --network <nome da rede>'
+
+pegue o endereço de contrato e procure da rede escolhida
+
+alteração do next.config.js para o contrato atual
+
+muda o nome do next.config.js para next.config.cjs para ser tratado como
+CommonJS
