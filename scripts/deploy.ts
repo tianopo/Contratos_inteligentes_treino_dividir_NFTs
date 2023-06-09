@@ -2,20 +2,20 @@ const ethers = require("hardhat")
 
 async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  const unstorageTime = currentTimestampInSeconds + 60;
 
-  const lockedAmount = ethers.parseEther("0.001");
+  const storageAmount = ethers.parseEther("0.001");
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
+  const storage = await ethers.deployContract("Storage", [unstorageTime], {
+    value: storageAmount,
   });
 
-  await lock.waitForDeployment();
+  await storage.waitForDeployment();
 
   console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
+    `storage with ${ethers.formatEther(
+      storageAmount
+    )}ETH and unstorage timestamp ${unstorageTime} deployed to ${storage.target}`
   );
 }
 
