@@ -7,6 +7,9 @@ module.exports = {
     externalArtifacts: ['externalArtifacts/*.json'], // optional array of glob patterns with external artifacts to process (for example external libs from node_modules)
     dontOverrideCompile: false // defaults to false
   },
+  plugins:[
+    "@nomicfoundation/hardhat-ethers",
+  ],
   defaultNetwork: "mumbai",
   networks: {
     hardhat: {
