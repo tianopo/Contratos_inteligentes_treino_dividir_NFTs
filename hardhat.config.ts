@@ -8,7 +8,10 @@ module.exports = {
     dontOverrideCompile: false // defaults to false
   },
   plugins:[
-    "@nomicfoundation/hardhat-ethers",
+    require("@nomicfoundation/hardhat-ethers"),
+    "@nomiclabs/hardhat-waffle",
+    '@nomiclabs/hardhat-etherscan',
+    'hardhat-deploy',
   ],
   defaultNetwork: "mumbai",
   networks: {

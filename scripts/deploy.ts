@@ -1,16 +1,19 @@
-const ethers = require("hardhat")
+const { ethers } = require("ethers")
+import hre from 'hardhat'
+import "@nomicfoundation/hardhat-ethers"
 
 async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const unstorageTime = currentTimestampInSeconds + 60;
+  
+  const storageAmount = ethers.parseEther("1");
+  console.log("parse")
 
-  const storageAmount = ethers.parseEther("0.001");
+  const Storage = await hre.ethers.getContractFactory("Storage");
+  console.log("contract")
+  const storage = await Storage.deploy(unstorageTime, storageAmount);
 
-  const storage = await ethers.deployContract("Storage", [unstorageTime], {
-    value: storageAmount,
-  });
-
-  await storage.waitForDeployment();
+  await storage.deployed();
 
   console.log(
     `storage with ${ethers.formatEther(
