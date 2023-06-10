@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react';
 const ethers = require("ethers");
 import Web3Modal from "web3modal";
@@ -41,7 +43,7 @@ export default function Home() {
     }
   }
 
-  async function readNumber(provider) {
+  async function readNumber(provider: any) {
     try {
       setRetrieveLoader(true);
       const signer = provider.getSigner();
