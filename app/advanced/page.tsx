@@ -7,7 +7,7 @@ export default function Home() {
   const contractAddress = process.env.CONTRACT_ADDRESS;
   const abi = process.env.ABI;
 
-  const [provider, setProvider] = useState();
+  const [provider, setProvider] = useState<any>();
   const [storedNumber, setStoredNumber] = useState<number>();
   const [enteredNumber, setEnteredNumber] = useState<number>(0);
   const [storeLoader, setStoreLoader] = useState<boolean>(false);
@@ -119,7 +119,7 @@ export default function Home() {
       <h3>This action saves entered number into the smart contract. (i.e Write Operation) </h3>
       <div>
         <input onChange={(e)=>{
-          setEnteredNumber(e.target.value);
+          setEnteredNumber(parseInt(e.target.value));
         }} className="placeholder:italic transition-all placeholder:text-gray-500 w-4/6 border border-gray-500 rounded-md p-2 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Enter a number to store" type="text" name="store"/>
       </div>
       <button onClick={writeNumber} className='px-4 py-1 bg-slate-300 flex justify-around hover:bg-slate-500 transition-all w-32'> { storeLoader ? (
