@@ -87,6 +87,3 @@ no terminal, executar o comando 'npx hardhat run --network <nome da rede> script
 pegue o endereço de contrato e procure da rede escolhida
 
 alteração do next.config.js para o contrato atual
-
-muda o nome do next.config.js para next.config.cjs para ser tratado como
-CommonJS
