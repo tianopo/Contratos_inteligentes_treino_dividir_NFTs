@@ -45,26 +45,44 @@ compilar o contrato com 'npx hardhat compile', gera arquivos no
 diretório artifacts incluindo bytecode e ABI do contrato
 
 implantar contrato inteligente na pasta scripts em deploy.js:
-const { ethers } = require("hardhat");
+const { ethers } = require("ethers")
+import hre from 'hardhat'
+import "@nomicfoundation/hardhat-ethers"
 
 async function main() {
-  const Contract = await ethers.getContractFactory("MeuContrato");
-  const contract = await Contract.deploy();
+  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
+  const unstorageTime = currentTimestampInSeconds + 60;
+  console.log("approved list:")
+  const storageAmount = ethers.parseEther("0.001");
+  console.log("parse || price")
 
-  await contract.deployed();
+  const Storage = await hre.ethers.getContractFactory("Storage");
+  console.log("contract")
+  const storage = await Storage.deploy();
+  console.log("deployment")
+  await storage.waitForDeployment();
+  console.log("deployed")
 
-  console.log("Contrato implantado em:", contract.address);
+  console.log(
+    `storage with ${ethers.formatEther(
+      storageAmount
+    )}ETH and unstorage timestamp ${unstorageTime} deployed to ${storage.target}`
+  );
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
 dica: o hardhat aceita apenas tipos commonjs
 
-no terminal, executar o comando 'npx hardhat run scripts/deploy.js --network <nome da rede>'
+testes: 
+ 'npx hardhat node' cria uma lista de carteiras de teste'
+ 'npx hardhat run --network localhost scripts/deploy.ts', usa as carteiras teste
+
+no terminal, executar o comando 'npx hardhat run --network <nome da rede> scripts/deploy.ts'
 
 pegue o endereço de contrato e procure da rede escolhida
 
