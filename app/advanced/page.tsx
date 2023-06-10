@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 const ethers = require("ethers");
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
