@@ -6,19 +6,21 @@ async function main() {
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const unstorageTime = currentTimestampInSeconds + 60;
   
-  const storageAmount = ethers.parseEther("1");
+  const storageAmount = ethers.parseEther("0.001");
   console.log("parse")
 
   const Storage = await hre.ethers.getContractFactory("Storage");
   console.log("contract")
-  const storage = await Storage.deploy(unstorageTime, storageAmount);
-
+  const storage = await Storage.deploy();
+  console.log("deployment")
   await storage.deployed();
+  console.log("deployed")
 
   console.log(
     `storage with ${ethers.formatEther(
       storageAmount
-    )}ETH and unstorage timestamp ${unstorageTime} deployed to ${storage.target}`
+    )}ETH and unstorage timestamp ${unstorageTime} deployed to ${storage.target},
+      address contract: ${storage.address}`
   );
 }
 

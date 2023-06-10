@@ -1,5 +1,14 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
+  defaultNetwork: "mumbai",
+  networks: {
+    mumbai: {
+      url: "https://polygon-mumbai.g.alchemy.com/v2/exHIHkjVQ4a4xeRHoQiJw7iTZHmys6rJ",
+      accounts: ["b38def016f6e2163088932101c99ad6c60bff9daae5c4c20ab9bce30f2f343a0"],
+      chainId: 80001
+    },
+    // outras redes...
+  },
   typechain: {
     outDir: 'src/types',
     target: 'ethers-v6',
@@ -13,17 +22,6 @@ module.exports = {
     '@nomiclabs/hardhat-etherscan',
     'hardhat-deploy',
   ],
-  defaultNetwork: "mumbai",
-  networks: {
-    hardhat: {
-
-    },
-    mumbai: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/exHIHkjVQ4a4xeRHoQiJw7iTZHmys6rJ",
-      accounts: ["b38def016f6e2163088932101c99ad6c60bff9daae5c4c20ab9bce30f2f343a0"],
-    },
-    // outras redes...
-  },
   solidity: {
     version: "0.8.18",
     settings: {
